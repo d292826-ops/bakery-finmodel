@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {DEFAULTS,ZERO_DELTAS,calculate} from './dist/model.mjs';
+import {FACTORS,sensitivityPoint,tornadoRows} from './dist/sensitivity-model.mjs';
+const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-7,`${a} != ${b}`);
+const params={...DEFAULTS},deltas={...ZERO_DELTAS,traffic:15,conversion:10,payroll:-5};
+const snapshot=JSON.stringify({params,deltas});
+for(const d of [ZERO_DELTAS,deltas])for(const month of [0,12,23])for(const f of FACTORS){
+ near(sensitivityPoint(params,d,{[f.key]:0},month).profit,calculate(params,d).months[month].netProfit);
+}
+const base=sensitivityPoint(params);
+near(base.profit,6743.547619047618);
+const traffic=sensitivityPoint(params,ZERO_DELTAS,{traffic:10});
+near(traffic.profit,48931.047619047618);
+near(traffic.delta,42187.5);
+near(sensitivityPoint(params,ZERO_DELTAS,{conversion:10}).values.conversion,27.5);
+near(sensitivityPoint(params,ZERO_DELTAS,{payroll:10}).delta,-29000);
+near(sensitivityPoint(params,deltas,{payroll:10}).delta,-27550);
+near(sensitivityPoint(params,deltas,{traffic:10}).values.traffic,15000*1.15*1.1);
+near(sensitivityPoint(params,ZERO_DELTAS,{traffic:10,averageCheck:10}).revenue,937500*1.21);
+near(sensitivityPoint(params,ZERO_DELTAS,{rent:10}).delta,-10200);
+assert.equal(sensitivityPoint({...params,conversion:95},ZERO_DELTAS,{conversion:10}).valid,false);
+const discountedConversion=sensitivityPoint({...params,conversion:90},{...ZERO_DELTAS,conversion:-50},{conversion:20});
+assert.equal(discountedConversion.valid,true);near(discountedConversion.values.conversion,54);
+for(const shift of [NaN,-101,Infinity])assert.equal(sensitivityPoint(params,ZERO_DELTAS,{traffic:shift}).valid,false);
+assert.equal(sensitivityPoint(params,ZERO_DELTAS,{unknown:10}).valid,false);
+assert.equal(sensitivityPoint(params,ZERO_DELTAS,{},24).valid,false);
+const zero=sensitivityPoint({...params,traffic:0},ZERO_DELTAS,{traffic:10});
+assert.equal(zero.valid,true);assert.equal(zero.margin,null);assert.equal(zero.values.traffic,0);assert.ok(zero.profit<0);
+assert.equal(sensitivityPoint({...params,conversion:110},ZERO_DELTAS,{conversion:-50}).valid,false);
+const rows=tornadoRows(params,ZERO_DELTAS,10);assert.equal(rows.length,10);assert.ok(rows.every((r,i)=>i===0||rows[i-1].impact>=r.impact));
+assert.equal(JSON.stringify({params,deltas}),snapshot);
+console.log('Sensitivity checks passed: source row 44 parity, 10 drivers, scenario compounding, payroll, two-factor interaction, bounds, zero revenue, immutability and ranking.');

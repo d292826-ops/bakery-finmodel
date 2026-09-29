@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#182f2c">
+  <meta name="description" content="Финансовая модель пекарни: показатели, отчёты и сравнение сценариев.">
+  <title>Пекарня — финансовая модель</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">К содержимому</a>
+  <header class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true">П</span><div><strong>Пекарня</strong><span>Финансовая модель</span></div></div><div class="header-meta">Планирование <span>в рублях</span></div></header>
+  <div class="app-shell">
+    <nav class="tabs" aria-label="Разделы модели"><button class="tab active" data-tab="overview" aria-current="page">Обзор</button><button class="tab" data-tab="reports">Отчёты</button><button class="tab" data-tab="scenarios">Сценарии</button><button class="tab" data-tab="sensitivity">Чувствительность</button><button class="tab" data-tab="memo">Аналитическая записка</button></nav>
+    <main id="main">
+      <div class="page-heading"><div><p class="eyebrow">ФИНАНСОВЫЙ ПЛАН</p><h1 id="page-title">Экономика вашей пекарни</h1></div><div class="selectors"><div class="period-control"><label for="active-scenario">Сценарий</label><select id="active-scenario"><option value="optimistic">Оптимистичный</option><option value="base" selected>Базовый</option><option value="pessimistic">Пессимистичный</option></select></div><div class="period-control"><label for="month-select">Месяц расчёта</label><select id="month-select"><option>Сентябрь 2025</option></select></div></div></div>
+      <div id="validation" role="alert" hidden></div>
+      <section id="overview" class="view"><div class="overview-grid"><div class="results"><div class="section-heading"><h2>Показатели месяца</h2><span id="month-caption">Сентябрь 2025</span></div><div class="metric-grid" id="month-cards"><article class="metric"><p>Выручка</p><strong>937 500 ₽</strong><span>Продажи за месяц</span></article><article class="metric"><p>EBITDA</p><strong class="positive">64 125 ₽</strong><span>Операционный результат</span></article><article class="metric"><p>Чистая прибыль</p><strong class="positive">6 744 ₽</strong><span>После расходов и налогов</span></article></div><div class="section-heading project-heading"><h2>Проект целиком</h2><span id="horizon-caption">24 месяца</span></div><div class="project-grid" id="project-cards"></div><div id="cash-note"></div></div><aside class="parameters"><div class="section-heading"><h2>Параметры</h2><button class="text-button" id="reset">Сбросить</button></div><p class="muted">Изменения сразу отражаются в расчётах.</p><div id="parameter-fields"><label class="field"><span>Трафик · посетителей / мес.</span><input type="number" value="15000"></label><label class="field"><span>Конверсия · %</span><input type="number" value="25"></label><label class="field"><span>Средний чек · ₽</span><input type="number" value="250"></label></div></aside></div><div class="charts-grid" id="charts"></div></section>
+      <section id="reports" class="view" hidden></section>
+      <section id="scenarios" class="view" hidden></section>
+      <section id="sensitivity" class="view" hidden></section>
+      <section id="memo" class="view" hidden></section>
+      <details class="methodology"><summary>Допущения и методика расчёта</summary><div id="methodology-content"></div></details>
+    </main>
+    <footer><span>Пекарня / Финансовая модель</span><span>Все суммы в рублях</span></footer>
+  </div>
+  <noscript>Для интерактивных расчётов включите JavaScript. Показанные исходные значения без JavaScript не обновляются.</noscript>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>
